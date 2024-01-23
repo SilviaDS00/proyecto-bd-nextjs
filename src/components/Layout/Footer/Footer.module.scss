@@ -1,0 +1,45 @@
+@import "~src/scss/index.scss";
+
+.footer{
+    background-color: $default-blue;
+    padding: 30px 0;
+}
+
+.columns{
+    display: flex;
+    justify-content: space-between;
+
+    >div{
+        width: 33.33%;
+        >a{
+            color: $white;
+            font-size: 1.8rem;
+        }
+        >ul{
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 0;
+        }
+        >ul>a{
+            color: white;
+        }
+        &.social{
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            >a{
+                margin-left: 1rem;
+            }
+        }
+    }
+}
+
+.copyright{
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid $medium-blue;
+    >span{
+        color: white;
+    }
+}

@@ -1,0 +1,15 @@
+@import "~/src/scss/index.scss";
+
+.signIn {
+  width: 50%;
+
+  > h3 {
+    margin-bottom: 20px;
+    color: $default-blue;
+  }
+
+  .actions {
+    margin-top: 10px;
+    text-align: center;
+  }
+}

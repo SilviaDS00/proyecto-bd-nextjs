@@ -1,0 +1,15 @@
+@import "~/src/scss/index.scss";
+
+.signUp {
+  width: 70%;
+
+  > h3 {
+    margin-bottom: 20px;
+    color: $default-blue;
+  }
+
+  .actions {
+    margin-top: 10px;
+    text-align: center;
+  }
+}

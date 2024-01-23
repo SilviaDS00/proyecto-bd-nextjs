@@ -1,0 +1,30 @@
+.ui.menu.secondary.pointing {
+    border-bottom: 2px solid $default-blue;
+  
+    a.item {
+      color: $default-blue;
+      font-weight: bold !important;
+  
+      &:hover,
+      &:active,
+      &:focus {
+        color: $medium-blue !important;
+        border-color: $medium-blue !important;
+      }
+  
+      &.active {
+        color: $medium-blue;
+        border-color: $medium-blue;
+      }
+  
+      > i {
+        color: $default-blue;
+      }
+    }
+  }
+  
+  .ui.tab.segment.active {
+    background-color: transparent;
+    padding: 20px 0 0 0;
+    border: none !important;
+  }
