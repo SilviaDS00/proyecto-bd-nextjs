@@ -9,7 +9,7 @@ export default function HomePage() {
       <BasicLayout>
         <Separator height={50} />
 
-        <Separator height={100} />
+        <Separator height={650} />
 
       </BasicLayout>
     </>
