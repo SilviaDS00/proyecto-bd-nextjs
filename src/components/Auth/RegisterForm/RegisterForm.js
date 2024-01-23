@@ -67,20 +67,7 @@ export function RegisterForm() {
       </Form.Group>
 
       <Form.Group widths="equal">
-        <Form.Input
-          fluid
-          name="name"
-          type="text"
-          placeholder="Nombre y apellidos"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.name && formik.errors.name
-              ? formik.errors.name
-              : null
-          }
-        />
-        <Form.Input
+      <Form.Input
           fluid
           name="password"
           type="password"
@@ -90,6 +77,19 @@ export function RegisterForm() {
           error={
             formik.touched.password && formik.errors.password
               ? formik.errors.password
+              : null
+          }
+        />
+        <Form.Input
+          fluid
+          name="passwordConfirmation" 
+          type="password"
+          placeholder="Confirmar Contraseña" 
+          value={formik.values.passwordConfirmation}  
+          onChange={formik.handleChange}
+          error={
+            formik.touched.passwordConfirmation && formik.errors.passwordConfirmation
+              ? formik.errors.passwordConfirmation
               : null
           }
         />
