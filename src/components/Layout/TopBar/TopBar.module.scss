@@ -8,6 +8,11 @@
     padding: 1rem 5rem;
     z-index: 5;
     background-color: $default-blue;
+
+    a:hover{
+        color: $light-blue;
+    
+    }
 }
 
 .left{

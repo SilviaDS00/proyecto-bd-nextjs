@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import * as styles from "./ChangeName.module.scss";
 import { Form } from "semantic-ui-react";
 import { useFormik } from "formik";
@@ -9,6 +10,7 @@ const userCtrl = new User();
 
 export function ChangeNameForm() {
   const { user } = useAuth();
+  const [isNameSet, setIsNameSet] = useState(Boolean(user.firstname && user.lastname));
 
   const formik = useFormik({
     initialValues: initialValues(user.firstname, user.lastname),
@@ -17,14 +19,16 @@ export function ChangeNameForm() {
     onSubmit: async (formValue) => {
       try {
         await userCtrl.updateMe(user.id, formValue);
+        setIsNameSet(true); // Marcar como establecido después de la actualización
       } catch (error) {
         console.error(error);
       }
     },
   });
+
   return (
     <Form onSubmit={formik.handleSubmit}>
-      <label>Nombre y apellidos</label>
+      <label>{isNameSet ? "Cambiar nombre y apellidos" : "Añadir nombre y apellidos"}</label>
 
       <div className={styles.content}>
         <Form.Input

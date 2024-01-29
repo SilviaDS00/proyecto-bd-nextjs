@@ -20,7 +20,11 @@
     > a {
         font-size: 2rem;
         margin: 0;
-        color: $medium-blue;
+        color: $default-blue;
+    }
+
+    > a:hover{
+        color: $medium-purple;
     }
 }
 

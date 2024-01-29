@@ -44,7 +44,7 @@ export function ChangeEmailForm() {
           error={formik.errors.repeatEmail}
         />
         <Form.Button type="submit" loading={formik.isSubmitting}>
-          Enviar
+          Cambiar
         </Form.Button>
       </div>
     </Form>

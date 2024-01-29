@@ -8,6 +8,13 @@
     color: $default-blue;
   }
 
+  a {
+    color: $default-blue;
+  }
+  a:hover {
+    color: $medium-purple;
+  }
+
   .actions {
     margin-top: 10px;
     text-align: center;

@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import * as styles from "./ChangePasswordForm.module.scss";
 import { Form } from "semantic-ui-react";
 import { useFormik } from "formik";
@@ -9,6 +10,7 @@ const userCtrl = new User();
 
 export function ChangePasswordForm() {
   const { user, logout } = useAuth();
+  const [isPasswordChanged, setIsPasswordChanged] = useState(false);
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -17,7 +19,10 @@ export function ChangePasswordForm() {
     onSubmit: async (formValue) => {
       try {
         await userCtrl.updateMe(user.id, { password: formValue.password });
-        logout();
+        setIsPasswordChanged(true);
+        // setTimeout(() => {
+        //   setIsPasswordChanged(false);
+        // }, 10000);
       } catch (error) {
         throw error;
       }
@@ -26,7 +31,7 @@ export function ChangePasswordForm() {
 
   return (
     <Form onSubmit={formik.handleSubmit}>
-      <label>Cambiar contraseña</label>
+      <label className={styles.text}>Cambiar contraseña</label>
       <div className={styles.content}>
         <Form.Input
           type="password"
@@ -45,9 +50,15 @@ export function ChangePasswordForm() {
           error={formik.errors.repeatPassword}
         />
         <Form.Button type="submit" loading={formik.isSubmitting}>
-          Enviar
+          Cambiar
         </Form.Button>
       </div>
+
+      {isPasswordChanged && (
+        <div className={styles.confirmationMessage}>
+          Se ha cambiado la contraseña correctamente.
+        </div>
+      )}
     </Form>
   );
 }

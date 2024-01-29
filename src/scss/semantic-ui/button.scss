@@ -1,3 +1,4 @@
+@import "../index.scss";
 .ui.button.primary{
     background-color: $default-blue;
     color: $white;
@@ -7,6 +8,6 @@
     &:hover,
     &:active,
     &:focus{
-        background-color: $medium-blue;
+        background-color: $medium-purple;
     }
 }

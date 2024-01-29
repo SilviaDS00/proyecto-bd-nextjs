@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightToBracket, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export function Account() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   const goToLogin = () => router.push("/join/sign-in");
@@ -14,12 +14,23 @@ export function Account() {
 
   return (
     <div className={styles.account}>
-      <Button icon className={styles.user}>
-        <FontAwesomeIcon
-          icon={user ? faUser : faRightToBracket}
-          onClick={user ? goToAccount : goToLogin}
-        />
-      </Button>
+      {!user && (
+        <Button icon className={styles.user} onClick={goToLogin} >
+          <FontAwesomeIcon icon={faUser}/>
+        </Button>
+      )}
+
+      {user && (
+        <Button icon className={styles.user} onClick={goToAccount}>
+          <FontAwesomeIcon icon={faUser}/>
+        </Button>
+      )}
+
+      {user && (
+        <Button icon className={styles.user} onClick={logout}>
+          <FontAwesomeIcon icon={faRightToBracket}/>
+        </Button>
+      )}
     </div>
   );
 }

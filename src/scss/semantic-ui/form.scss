@@ -9,14 +9,14 @@
         input {
           border: 2px solid $default-blue;
           background-color: $white;
-          color: $medium-blue;
+          color: $medium-purple;
           padding: 14px;
           border-radius: 6px;
   
           &:hover,
           &:active,
           &:focus {
-            border-color: $medium-blue;
+            border-color: $medium-purple;
           }
         }
       }
@@ -37,7 +37,7 @@
       padding: 15.5px 30px;
       border-radius: 6px;
       &:hover{
-        background-color: $medium-blue;
+        background-color: $medium-purple;
       }
     }
   }

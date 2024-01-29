@@ -1,24 +1,24 @@
 .ui.menu.secondary.pointing {
-    border-bottom: 2px solid $default-blue;
+    border-bottom: 2px solid $light-blue;
   
     a.item {
-      color: $default-blue;
+      color: $light-blue;
       font-weight: bold !important;
   
       &:hover,
       &:active,
       &:focus {
-        color: $medium-blue !important;
-        border-color: $medium-blue !important;
+        color: $default-blue !important;
+        border-color: $default-blue !important;
       }
   
       &.active {
-        color: $medium-blue;
-        border-color: $medium-blue;
+        color: $default-blue;
+        border-color: $default-blue;
       }
   
       > i {
-        color: $default-blue;
+        color: $light-purple;
       }
     }
   }

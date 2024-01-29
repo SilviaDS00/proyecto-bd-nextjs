@@ -8,7 +8,7 @@
 
     &:hover {
       > i {
-        color: $dark-blue;
+        color: $light-blue;
       }
     }
     > i{
@@ -20,25 +20,17 @@
         justify-content: center;
     }
   }
-  .cart{
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    >div{
-        background-color: $medium-blue;
-        color: white;
-        font-size: 0.7rem;
-        margin-left: 5px;
-    }
-  }
   .user {
     background-color: transparent !important;
-    border-radius: 10px;
     font-size: 1.3rem;
     color: white;
     &:hover{
-        color: $dark-blue;
+        color: $light-blue;
+    }
+    p{
+      font-size: 1.2rem;
+      font-weight: lighter;
     }
   }
 }
