@@ -9,9 +9,9 @@ export function initialValues() {
 
 export function validationSchema() {
   return Yup.object({
-    password: Yup.string().required(true),
+    password: Yup.string().required("Debes introducir una contraseña"),
     repeatPassword: Yup.string()
-      .required(true)
+      .required("Debes confirmar la contraseña")
       .oneOf([Yup.ref("password")], true),
   });
 }

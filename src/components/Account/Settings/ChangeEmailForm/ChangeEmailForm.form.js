@@ -9,10 +9,10 @@ export function initialValues() {
 
 export function validationSchema() {
   return Yup.object({
-    email: Yup.string().email(true).required(true),
+    email: Yup.string().email(true).required("Debes introducir un email"),
     repeatEmail: Yup.string()
       .email(true)
-      .required(true)
+      .required("Debes confirmar el email")
       .oneOf([Yup.ref("email")], true),
   });
 }

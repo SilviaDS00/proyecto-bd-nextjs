@@ -22,10 +22,8 @@ export function Account() {
     setTimeout(() => {
       logout();
       setLoading(false);
-
       // Mostrar mensaje de cerrar sesión exitoso
       toast.success("¡Sesión cerrada exitosamente!");
-
       // Redirigir al usuario al inicio después de unos segundos
       setTimeout(() => {
         router.push("/");

@@ -4,11 +4,15 @@ import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./ChangeEmailForm.form";
 import { User } from "@/api";
 import { useAuth } from "@/hooks";
+import React, { useState } from "react";
+
 
 const userCtrl = new User();
 
 export function ChangeEmailForm() {
   const { user, updateUser } = useAuth();
+  const [isEmailChanged, setIsEmailChanged] = useState(false);
+
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -18,7 +22,13 @@ export function ChangeEmailForm() {
       try {
         await userCtrl.updateMe(user.id, { email: formValue.email });
         updateUser("email", formValue.email);
-        formik.handleReset;
+        formik.handleReset();
+        setIsEmailChanged(true);
+
+        setTimeout(() => {
+          setIsEmailChanged(false);
+        }, 3000);
+
       } catch (error) {
         throw error;
       }
@@ -47,6 +57,12 @@ export function ChangeEmailForm() {
           Cambiar
         </Form.Button>
       </div>
+
+      {isEmailChanged && (
+        <div className={styles.confirmationMessage}>
+          Se ha cambiado el email correctamente.
+        </div>
+      )}
     </Form>
   );
 }

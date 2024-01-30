@@ -11,6 +11,8 @@ const userCtrl = new User();
 export function ChangeNameForm() {
   const { user } = useAuth();
   const [isNameSet, setIsNameSet] = useState(Boolean(user.firstname && user.lastname));
+  const [isNameChanged, setIsNameChanged] = useState(false);
+
 
   const formik = useFormik({
     initialValues: initialValues(user.firstname, user.lastname),
@@ -20,6 +22,10 @@ export function ChangeNameForm() {
       try {
         await userCtrl.updateMe(user.id, formValue);
         setIsNameSet(true); // Marcar como establecido después de la actualización
+        setIsNameChanged(true);
+        setTimeout(() => {
+          setIsNameChanged(false);
+        }, 3000);
       } catch (error) {
         console.error(error);
       }
@@ -49,6 +55,11 @@ export function ChangeNameForm() {
           Cambiar
         </Form.Button>
       </div>
+      {isNameChanged && (
+        <div className={styles.confirmationMessage}>
+          Se ha cambiado el nombre correctamente.
+        </div>
+      )}
     </Form>
   );
 }

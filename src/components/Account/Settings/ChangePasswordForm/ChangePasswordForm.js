@@ -20,9 +20,9 @@ export function ChangePasswordForm() {
       try {
         await userCtrl.updateMe(user.id, { password: formValue.password });
         setIsPasswordChanged(true);
-        // setTimeout(() => {
-        //   setIsPasswordChanged(false);
-        // }, 10000);
+        setTimeout(() => {
+          setIsPasswordChanged(false);
+        }, 3000);
       } catch (error) {
         throw error;
       }
