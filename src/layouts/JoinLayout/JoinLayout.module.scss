@@ -42,6 +42,21 @@
     background-size: cover;
     height: 100%;
     width: 50%;
+}
 
+@media (max-width: 768px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
+    }
+    
+    .blockLeft {
+        width: 100%;
+    }
+
+    .blockRight {
+        display: none; /* Ocultar la imagen de fondo en dispositivos móviles */
+    }
 }
