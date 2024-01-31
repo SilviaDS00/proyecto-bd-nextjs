@@ -9,6 +9,9 @@ import { Tab } from "semantic-ui-react";
 import * as styles from "./account.module.scss";
 import { Separator } from "@/components/Shared";;
 import { useAuth } from "@/hooks";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { set } from "lodash";
 
 export default function account() {
   const router = useRouter();
@@ -18,6 +21,24 @@ export default function account() {
     router.push("/");
     return null;
   }
+
+  const handleLogout = async () => {
+    try {
+      // Mostrar Toast de cierre de sesión
+     setTimeout(() => {
+        toast.success("¡Sesión cerrada exitosamente!");
+      }
+      , 1000);
+
+      // Realizar logout después de mostrar el Toast
+      await logout();
+
+      // Redirigir a la página principal después del logout
+      router.push("/");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
 
   const panes = [
     {
@@ -52,7 +73,7 @@ export default function account() {
         key: 21,
         icon: "log out",
         content: "Cerrar sesión",
-        onClick: logout,
+        onClick: handleLogout,
       },
     },
   ];

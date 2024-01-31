@@ -1,30 +1,36 @@
 import React from "react";
-import { Form, Message } from "semantic-ui-react";
+import { Form, Message, Icon, Dimmer, Loader  } from "semantic-ui-react";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { initialValues, validationSchema } from "./RegisterForm.form";
 import { Auth } from "@/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useState } from "react";
 
 const authCtrl = new Auth();
 
 export function RegisterForm() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: validationSchema(),
     onSubmit: async (formValues, { setSubmitting, setStatus }) => {
       try {
+        setIsLoading(true);
         await authCtrl.register(formValues);
 
         // Mostrar mensaje de registro exitoso
-        toast.success("¡Registro exitoso! Redirigiendo a la página de inicio de sesión.");
+        toast.success(
+          "¡Registro exitoso! Redirigiendo a la página de inicio de sesión."
+        );
 
         // Redirigir al usuario a la página de inicio de sesión después de unos segundos
         setTimeout(() => {
           router.push("/join/sign-in");
-        }, 3000);
+        }, 2000);
       } catch (error) {
         if (
           error.response &&
@@ -42,8 +48,12 @@ export function RegisterForm() {
   });
   return (
     <Form onSubmit={formik.handleSubmit}>
+      {isLoading && (
+        <Dimmer active inverted>
+          <Loader size="large">Loading</Loader>
+        </Dimmer>
+      )}
       {formik.status && <Message negative content={formik.status} />}
-
       <Form.Group widths="equal">
         <Form.Input
           fluid
@@ -72,7 +82,6 @@ export function RegisterForm() {
           }
         />
       </Form.Group>
-
       <Form.Group widths="equal">
         <Form.Input
           fluid
@@ -102,11 +111,9 @@ export function RegisterForm() {
           }
         />
       </Form.Group>
-
       <Form.Button type="submit" fluid loading={formik.isSubmitting}>
         Registrarse
       </Form.Button>
-
       {/* Contenedor para las notificaciones */}
       <ToastContainer />
     </Form>
