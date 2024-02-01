@@ -7,7 +7,7 @@ export function Menu() {
     <div>
       <div className={styles.categories}>
         <Link href="/">Inicio</Link>
-        <Link href="/test">Hacer test</Link>
+        <Link href="/form">Realizar test</Link>
         <Link href="/info">Saber más</Link>
       </div>
     </div>

@@ -1,14 +1,15 @@
 import { BasicLayout } from "@/layouts";
 import { Separator } from "@/components/Shared";
 import Link from "next/link";
+import { FormTest } from "@/components/Form";
 
 
-export default function TestPage() {
+export default function fromPage() {
   return (
     <>
       <BasicLayout>
-        <Separator height={50} />
-
+        <Separator height={100} />
+        <FormTest />
         <Separator height={100} />
 
       </BasicLayout>
