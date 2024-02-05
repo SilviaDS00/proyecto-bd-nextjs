@@ -10,7 +10,7 @@ export default function fromPage() {
       <BasicLayout>
         <Separator height={100} />
         <FormTest />
-        <Separator height={300} />
+        <Separator height={110} />
 
       </BasicLayout>
     </>

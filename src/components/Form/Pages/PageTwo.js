@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Form, Input, TextArea, Button, Radio } from "semantic-ui-react";
-import styles from "./FormTest.module.scss";
+import styles from "./Page.module.scss";
 
 export function PageTwo() {
   const [formData, setFormData] = useState({
@@ -10,13 +10,6 @@ export function PageTwo() {
     email: "",
     message: "",
   });
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,14 +28,14 @@ export function PageTwo() {
           Sientes interés por el mantenimiento de sistemas, entonos de red,
           hardware y software.
         </label>
-        <Form.Group className={styles.radioColumn}>
+        <Form.Group>
           <Form.Field>Muy en desacuerdo</Form.Field>
-          <Form.Radio label="0" />
-          <Form.Radio label="1" />
-          <Form.Radio label="2" />
-          <Form.Radio label="3" />
-          <Form.Radio label="4" />
-          <Form.Radio label="5" />
+          <Form.Radio label="0" name='first-asir'/>
+          <Form.Radio label="1" name='first-asir'/>
+          <Form.Radio label="2" name='first-asir'/>
+          <Form.Radio label="3" name='first-asir'/>
+          <Form.Radio label="4" name='first-asir'/>
+          <Form.Radio label="5" name='first-asir'/>
           <Form.Field>Muy de acuerdo</Form.Field>
         </Form.Group>
       </Form.Field>
@@ -52,14 +45,14 @@ export function PageTwo() {
           ¿Te genera curiosidad aprender sobre el mundo de la ciberseguridad y
           hacking ético?
         </label>
-        <Form.Group className={styles.radioColumn}>
+        <Form.Group>
           <Form.Field>Muy en desacuerdo</Form.Field>
-          <Form.Radio label="0" />
-          <Form.Radio label="1" />
-          <Form.Radio label="2" />
-          <Form.Radio label="3" />
-          <Form.Radio label="4" />
-          <Form.Radio label="5" />
+          <Form.Radio label="0" name='second-asir'/>
+          <Form.Radio label="1" name='second-asir'/>
+          <Form.Radio label="2" name='second-asir'/>
+          <Form.Radio label="3" name='second-asir'/>
+          <Form.Radio label="4" name='second-asir'/>
+          <Form.Radio label="5" name='second-asir'/>
           <Form.Field>Muy de acuerdo</Form.Field>
         </Form.Group>
       </Form.Field>
@@ -70,14 +63,14 @@ export function PageTwo() {
           distintos enfoques como el conocimiento de áreas matemáticas,
           estadística, ciencias…
         </label>
-        <Form.Group className={styles.radioColumn}>
+        <Form.Group>
           <Form.Field>Muy en desacuerdo</Form.Field>
-          <Form.Radio label="0" />
-          <Form.Radio label="1" />
-          <Form.Radio label="2" />
-          <Form.Radio label="3" />
-          <Form.Radio label="4" />
-          <Form.Radio label="5" />
+          <Form.Radio label="0" name='first-dam'/>
+          <Form.Radio label="1" name='first-dam'/>
+          <Form.Radio label="2" name='first-dam'/>
+          <Form.Radio label="3" name='first-dam'/>
+          <Form.Radio label="4" name='first-dam'/>
+          <Form.Radio label="5" name='first-dam'/>
           <Form.Field>Muy de acuerdo</Form.Field>
         </Form.Group>
       </Form.Field>
@@ -87,14 +80,14 @@ export function PageTwo() {
           Siento curiosidad por cómo funcionan los datos y la gestión de
           procesos que ocurren detrás de un sitio web o aplicación.
         </label>
-        <Form.Group className={styles.radioColumn}>
+        <Form.Group>
           <Form.Field>Muy en desacuerdo</Form.Field>
-          <Form.Radio label="0" />
-          <Form.Radio label="1" />
-          <Form.Radio label="2" />
-          <Form.Radio label="3" />
-          <Form.Radio label="4" />
-          <Form.Radio label="5" />
+          <Form.Radio label="0" name='second-dam'/>
+          <Form.Radio label="1" name='second-dam'/>
+          <Form.Radio label="2" name='second-dam'/>
+          <Form.Radio label="3" name='second-dam'/>
+          <Form.Radio label="4" name='second-dam'/>
+          <Form.Radio label="5" name='second-dam'/>
           <Form.Field>Muy de acuerdo</Form.Field>
         </Form.Group>
       </Form.Field>
@@ -104,14 +97,14 @@ export function PageTwo() {
           Pienso que se me daría bien elegir una buena estructura para montar
           una página web.
         </label>
-        <Form.Group className={styles.radioColumn}>
+        <Form.Group>
           <Form.Field>Muy en desacuerdo</Form.Field>
-          <Form.Radio label="0" />
-          <Form.Radio label="1" />
-          <Form.Radio label="2" />
-          <Form.Radio label="3" />
-          <Form.Radio label="4" />
-          <Form.Radio label="5" />
+          <Form.Radio label="0" name='first-daw'/>
+          <Form.Radio label="1" name='first-daw'/>
+          <Form.Radio label="2" name='first-daw'/>
+          <Form.Radio label="3" name='first-daw'/>
+          <Form.Radio label="4" name='first-daw'/>
+          <Form.Radio label="5" name='first-daw'/>
           <Form.Field>Muy de acuerdo</Form.Field>
         </Form.Group>
       </Form.Field>
@@ -121,14 +114,14 @@ export function PageTwo() {
           Sientes curiosidad por cómo está hecha una página web, su estética y
           diseño me resultan lo más interesante.
         </label>
-        <Form.Group className={styles.radioColumn}>
+        <Form.Group>
           <Form.Field>Muy en desacuerdo</Form.Field>
-          <Form.Radio label="0" />
-          <Form.Radio label="1" />
-          <Form.Radio label="2" />
-          <Form.Radio label="3" />
-          <Form.Radio label="4" />
-          <Form.Radio label="5" />
+          <Form.Radio label="0" name='second-daw'/>
+          <Form.Radio label="1" name='second-daw'/>
+          <Form.Radio label="2" name='second-daw'/>
+          <Form.Radio label="3" name='second-daw'/>
+          <Form.Radio label="4" name='second-daw'/>
+          <Form.Radio label="5" name='second-daw'/>
           <Form.Field>Muy de acuerdo</Form.Field>
         </Form.Group>
       </Form.Field>

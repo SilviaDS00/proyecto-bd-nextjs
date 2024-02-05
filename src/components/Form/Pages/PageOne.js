@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Form, Input, TextArea, Button, Radio } from "semantic-ui-react";
-import styles from "./FormTest.module.scss";
+import styles from "./Page.module.scss";
 
 export function PageOne() {
   const [formData, setFormData] = useState({
@@ -25,33 +25,36 @@ export function PageOne() {
   };
 
   return (
-    <Form onSubmit={handleSubmit} className={styles.formStyle}>
+    <Form onSubmit={handleSubmit} >
       <Form.Field>
         <label>Edad:</label>
-        <Form.Group className={styles.radioColumn}>
-          <Form.Radio label="16 - 18" />
-          <Form.Radio label="19 - 25" />
-          <Form.Radio label="26 - 35" />
-          <Form.Radio label="+35" />
-        </Form.Group>
+        <Form.Input
+          placeholder="Edad"
+          name="name"
+          onChange={handleChange}
+          type="number"
+        />
       </Form.Field>
 
       <Form.Field>
         <label>Género:</label>
         <Form.Group inline>
-          <Form.Radio label="Masculino" />
-          <Form.Radio label="Femenino" />
-          <Form.Radio label="Otro" />
-          <Form.Radio label="Prefiero no decirlo" />
+          <div>
+            <Form.Radio label="Masculino" name="gender" />
+            <Form.Radio label="Femenino" name="gender"/>
+            <Form.Radio label="Otro" name="gender"/>
+            <Form.Radio label="Prefiero no decirlo" name="gender"/>
+          </div>
         </Form.Group>
       </Form.Field>
 
       <Form.Field>
         <label>Código postal</label>
-        <Input
+        <Form.Input
           placeholder="Código postal"
-          name="name"
+          name="cp"
           onChange={handleChange}
+          type="number"
         />
       </Form.Field>
 
@@ -60,27 +63,33 @@ export function PageOne() {
           ¿Qué modalidad de trabajo te gustaría en el mundo laboral?
         </label>
         <Form.Group inline>
-          <Form.Radio label="Presencial" />
-          <Form.Radio label="Remoto" />
-          <Form.Radio label="Híbrido" />
+          <div>
+            <Form.Radio label="Presencial" name="modal"/>
+            <Form.Radio label="Remoto" name="modal"/>
+            <Form.Radio label="Híbrido" name="modal"/>
+          </div>
         </Form.Group>
       </Form.Field>
 
       <Form.Field>
         <label>Estudios de acceso al CFGS</label>
         <Form.Group inline>
-          <Form.Radio label="Bachillerato" />
-          <Form.Radio label="Prueba de acceso a Grado Superior" />
-          <Form.Radio label="Otros" />
+          <div>
+            <Form.Radio label="Bachillerato" name="studies"/>
+            <Form.Radio label="Prueba de acceso a Grado Superior" name="studies"/>
+            <Form.Radio label="Otros" name="studies"/>
+          </div>
         </Form.Group>
       </Form.Field>
 
       <Form.Field>
         <label>Motivo por el que quieres estudiar un CFGS</label>
         <Form.Group inline>
-          <Form.Radio label="Salida laboral" />
-          <Form.Radio label="Continuar mi formación" />
-          <Form.Radio label="Especialización profesional" />
+          <div>
+            <Form.Radio label="Salida laboral" name="reason"/>
+            <Form.Radio label="Continuar mi formación" name="reason"/>
+            <Form.Radio label="Especialización profesional" name="reason"/>
+          </div>
         </Form.Group>
       </Form.Field>
 
@@ -89,9 +98,11 @@ export function PageOne() {
           ¿Te gustaría trabajar para una empresa o emprender por tu cuenta?
         </label>
         <Form.Group inline>
-          <Form.Radio label="Trabajar para una empresa" />
-          <Form.Radio label="Continuar mi formación" />
-          <Form.Radio label="Emprender por mi cuenta" />
+          <div>
+            <Form.Radio label="Trabajar para una empresa" name='undertake'/>
+            <Form.Radio label="Continuar mi formación" name='undertake'/>
+            <Form.Radio label="Emprender por mi cuenta" name='undertake'/>
+          </div>
         </Form.Group>
       </Form.Field>
 

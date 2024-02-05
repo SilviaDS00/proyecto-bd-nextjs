@@ -4,6 +4,7 @@ import { Form as SemanticForm, Button } from "semantic-ui-react";
 import { useRouter } from "next/router";
 import { PageOne, PageTwo } from "./Pages/index.js";
 import * as styles from "./FormTest.module.scss";	
+import { Separator } from "../Shared/index.js";
 
 export function FormTest({ children, onSubmit, ...props }) {
   const [formData, setFormData] = useState({
@@ -42,6 +43,9 @@ export function FormTest({ children, onSubmit, ...props }) {
 
   return (
     <SemanticForm onSubmit={onSubmit || handleSubmit} {...props} className={styles.formStyle}>
+      <h1>Formulario de Prueba</h1>
+      
+      <Separator height={30}/>
       {currentPage === 1 && <PageOne handleChange={handleChange} />}
       {currentPage === 2 && (
         <>
@@ -60,5 +64,4 @@ export function FormTest({ children, onSubmit, ...props }) {
   );
 }
 
-// Re-exporta los componentes Semantic-UI-React que estás utilizando
 export { Button };
