@@ -57,9 +57,13 @@ export default function account() {
       render: () => (
         <Tab.Pane attached={false}>
           <Settings.ChangeNameForm />
+          {/* <div className={styles.containerForms}>
+            <Settings.ChangeUsernameForm />
+          </div > */}
           <div className={styles.containerForms}>
             <Settings.ChangeEmailForm />
           </div>
+          
           <div className={styles.containerForms}>
             <Settings.ChangePasswordForm />
           </div>
