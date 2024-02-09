@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Progress } from "semantic-ui-react";
 import styles from "./FormTest.module.scss";
+import axios from "axios";
+import { Modelo } from "@/api";
 
 export function FormTest() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [formData, setFormData] = useState({});
+  const [prediction, setPrediction] = useState(null); // Asegúrate de que setPrediction esté declarada
 
   const [currentQuestion, setCurrentQuestion] = useState(1);
 
@@ -17,7 +16,7 @@ export function FormTest() {
       input: true,
     },
     {
-      label: "Género:",
+      label: "Género",
       options: ["Masculino", "Femenino", "Otro", "Prefiero no decirlo"],
     },
     {
@@ -52,41 +51,34 @@ export function FormTest() {
     {
       label:
         "Sientes interés por el mantenimiento de sistemas, entonos de red, hardware y software.",
-      options: [1, 2, 3, 4, 5],
+      options: [0, 1, 2, 3, 4, 5],
     },
     {
       label:
         "¿Te genera curiosidad aprender sobre el mundo de la ciberseguridad y hacking ético?",
-      options: [1, 2, 3, 4, 5],
+      options: [0, 1, 2, 3, 4, 5],
     },
     {
       label:
         "He sentido atracción en cómo los programas informáticos incluyen distintos enfoques como el conocimiento de áreas matemáticas, estadística, ciencias…",
-      options: [1, 2, 3, 4, 5],
+      options: [0, 1, 2, 3, 4, 5],
     },
     {
       label:
         "Siento curiosidad por cómo funcionan los datos y la gestión de procesos que ocurren detrás de un sitio web o aplicación.",
-      options: [1, 2, 3, 4, 5],
+      options: [0, 1, 2, 3, 4, 5],
     },
     {
       label:
         "Pienso que se me daría bien elegir una buena estructura para montar una página web.",
-      options: [1, 2, 3, 4, 5],
+      options: [0, 1, 2, 3, 4, 5],
     },
     {
       label:
         "Sientes curiosidad por cómo está hecha una página web, su estética y diseño me resultan lo más interesante.",
-      options: [1, 2, 3, 4, 5],
+      options: [0, 1, 2, 3, 4, 5],
     },
   ];
-
-  // const handleChange = (e) => {
-  //   setFormData({
-  //     ...formData,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
 
   const handleRadioChange = (value) => {
     setFormData({
@@ -97,12 +89,12 @@ export function FormTest() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-  
+
     // Validación específica para el código postal
     if (name === "question3") {
       // Asegurar que solo sean dígitos y exactamente 5 dígitos
       const validPostalCode = /^\d{5}$/.test(value);
-      
+
       if (validPostalCode || value === "") {
         setFormData({
           ...formData,
@@ -128,7 +120,7 @@ export function FormTest() {
       // Guardar el estado actual antes de avanzar
       const updatedFormData = { ...formData };
       setFormData(updatedFormData);
-      
+
       setCurrentQuestion(currentQuestion + 1);
     } else {
       // Muestra una alerta o realiza alguna acción para indicar que se debe responder la pregunta actual
@@ -136,79 +128,140 @@ export function FormTest() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const modelo = new Modelo(); // Crear una instancia de la clase Modelo
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Formulario enviado:", formData);
+
+    try {
+      const ultimasRespuestas = Object.values(formData)
+        .slice(-6)
+        .map((respuesta) => parseInt(respuesta, 10));
+      const nombresPreguntas = questions
+        .slice(-6)
+        .map((pregunta) => pregunta.label);
+
+      const datosCuestionario = {
+        columnas: nombresPreguntas,
+        respuestas: ultimasRespuestas.filter((value) => !isNaN(value)),
+      };
+
+      const respuesta = await axios.post(
+        "http://127.0.0.1:5000/submit-cuestionario",
+        datosCuestionario
+      );
+
+      setPrediction(respuesta.data.prediccion);
+    } catch (error) {
+      console.error("Error al obtener la predicción:", error);
+    }
+  };
+
+  const generateSummary = () => {
+    const summary = [];
+    for (let i = 1; i <= questions.length; i++) {
+      const answer = formData[`question${i}`];
+      if (answer !== undefined) {
+        summary.push(`${questions[i - 1].label}: ${answer}`);
+      }
+    }
+    return summary.join(", ");
+  };
+
+  const obtenerResultadoTexto = () => {
+    if (prediction == 0) {
+      return "ASIR";
+    } else if (prediction == 1) {
+      return "DAM";
+    } else if (prediction == 2) {
+      return "DAW";
+    } else {
+      return "Resultado no reconocido";
+    }
   };
 
   return (
     <div className={styles.formContainer}>
-    <Form onSubmit={handleSubmit} className={styles.formStyle}>
-      <div className={styles.progressContainer}>
-        <Progress percent={calculateProgress()} progress success />
-      </div>
-      <div className={styles.currentPage}>
-        Pregunta {currentQuestion} de {questions.length}
-      </div>
-      
-      {questions.map(
-        (question, index) =>
-          index + 1 === currentQuestion && (
-            <div key={index}>
-              <div className={styles.questionContainer}>
-              <Form.Field>
-                <label>{question.label}</label>
-                {question.options ? (
-                  <Form.Group inline>
-                    <div className={styles.radioColumn}>
-                      {question.options.map((option, optionIndex) => (
-                        <Form.Radio
-                          key={optionIndex}
-                          label={option}
-                          onChange={() => handleRadioChange(option)}
-                          checked={
-                            formData[`question${currentQuestion}`] === option
-                          }
-                        />
-                      ))}
-                    </div>
-                  </Form.Group>
-                ) : question.input ? (
-                  <Form.Input
-                    placeholder={question.label}
-                    name={`question${currentQuestion}`}
-                    onChange={handleInputChange}
-                  />
-                ) : null}
-              </Form.Field>
-              </div>
-              <div className={styles.buttons}>
-                <div>
-                  {currentQuestion > 1 && (
-                    <Button
-                      onClick={() => setCurrentQuestion(currentQuestion - 1)}
-                    >
-                      Volver
+      <Form onSubmit={handleSubmit} className={styles.formStyle}>
+        <div className={styles.progressContainer}>
+          <Progress percent={calculateProgress()} progress success />
+        </div>
+        <div className={styles.currentPage}>
+          Pregunta {currentQuestion} de {questions.length}
+        </div>
+
+        {questions.map(
+          (question, index) =>
+            index + 1 === currentQuestion && (
+              <div key={index}>
+                <div className={styles.questionContainer}>
+                  <Form.Field>
+                    <label>{question.label}</label>
+                    {question.options ? (
+                      <Form.Group inline>
+                        <div className={styles.radioColumn}>
+                          {question.options.map((option, optionIndex) => (
+                            <Form.Radio
+                              key={optionIndex}
+                              label={option}
+                              onChange={() => handleRadioChange(option)}
+                              checked={
+                                formData[`question${currentQuestion}`] ===
+                                option
+                              }
+                            />
+                          ))}
+                        </div>
+                      </Form.Group>
+                    ) : question.input ? (
+                      <Form.Input
+                        placeholder={question.label}
+                        name={`question${currentQuestion}`}
+                        onChange={handleInputChange}
+                      />
+                    ) : null}
+                  </Form.Field>
+                </div>
+                <div className={styles.buttons}>
+                  <div>
+                    {currentQuestion > 1 && (
+                      <Button
+                        onClick={() => setCurrentQuestion(currentQuestion - 1)}
+                      >
+                        Volver
+                      </Button>
+                    )}
+                  </div>
+                  <div>
+                    {currentQuestion < questions.length && (
+                      <Button onClick={handleNextQuestion}>Siguiente</Button>
+                    )}
+                  </div>
+                </div>
+                {currentQuestion === questions.length && (
+                  <div className={styles.submitButtonContainer}>
+                    <Button type="submit" className={styles.submitButton}>
+                      Enviar
                     </Button>
-                  )}
-                </div>
-                <div>
-                  {currentQuestion < questions.length && (
-                    <Button onClick={handleNextQuestion}>Siguiente</Button>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-              {currentQuestion === questions.length && (
-                <div className={styles.submitButtonContainer}>
-                  <Button type="submit" className={styles.submitButton}>
-                    Enviar
-                  </Button>
-                </div>
-              )}
-            </div>
-          )
+            )
+        )}
+      </Form>
+      {prediction ? (
+        <div className={styles.predictionContainer}>
+          <p className={styles.textoPrediccion}>Te recomendamos que estudies...</p>
+          <p className={styles.resultadoPrediccion}>{obtenerResultadoTexto()}</p>
+        </div>
+      ) : (
+        <p>Esperando la predicción...</p>
       )}
-    </Form>
+      {currentQuestion === questions.length && (
+        <div className={styles.summaryContainer}>
+          <strong>Resumen de respuestas:</strong> {generateSummary()}
+        </div>
+      )}
     </div>
   );
 }
