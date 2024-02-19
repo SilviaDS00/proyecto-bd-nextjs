@@ -1,37 +1,42 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Progress } from "semantic-ui-react";
+import { Form, Button, Progress, List } from "semantic-ui-react";
 import styles from "./FormTest.module.scss";
 import axios from "axios";
-import { Modelo } from "@/api";
 
 export function FormTest() {
   const [formData, setFormData] = useState({});
   const [prediction, setPrediction] = useState(null); // Asegúrate de que setPrediction esté declarada
-
   const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [showReview, setShowReview] = useState(false);
 
   const questions = [
     {
+      id: 1,
       label: "Edad",
       input: true,
     },
     {
+      id: 2,
       label: "Género",
       options: ["Masculino", "Femenino", "Otro", "Prefiero no decirlo"],
     },
     {
+      id: 3,
       label: "Código postal",
       input: true,
     },
     {
+      id: 4,
       label: "¿Qué modalidad de trabajo te gustaría en el mundo laboral?",
       options: ["Presencial", "Remoto", "Híbrido"],
     },
     {
+      id: 5,
       label: "Estudios de acceso al CFGS",
       options: ["Bachillerato", "Prueba de acceso a Grado Superior", "Otros"],
     },
     {
+      id: 6,
       label: "Motivo por el que quieres estudiar un CFGS",
       options: [
         "Salida laboral",
@@ -40,6 +45,7 @@ export function FormTest() {
       ],
     },
     {
+      id: 7,
       label:
         "¿Te gustaría trabajar para una empresa o emprender por tu cuenta?",
       options: [
@@ -49,33 +55,39 @@ export function FormTest() {
       ],
     },
     {
+      id: 8,
       label:
-        "Sientes interés por el mantenimiento de sistemas, entonos de red, hardware y software.",
+        "Sientes interés por el mantenimiento de sistemas, entonos de red, hardware y software",
       options: [0, 1, 2, 3, 4, 5],
     },
     {
+      id: 9,
       label:
         "¿Te genera curiosidad aprender sobre el mundo de la ciberseguridad y hacking ético?",
       options: [0, 1, 2, 3, 4, 5],
     },
     {
+      id: 10,
       label:
         "He sentido atracción en cómo los programas informáticos incluyen distintos enfoques como el conocimiento de áreas matemáticas, estadística, ciencias…",
       options: [0, 1, 2, 3, 4, 5],
     },
     {
+      id: 11,
       label:
-        "Siento curiosidad por cómo funcionan los datos y la gestión de procesos que ocurren detrás de un sitio web o aplicación.",
+        "Siento curiosidad por cómo funcionan los datos y la gestión de procesos que ocurren detrás de un sitio web o aplicación",
       options: [0, 1, 2, 3, 4, 5],
     },
     {
+      id: 12,
       label:
-        "Pienso que se me daría bien elegir una buena estructura para montar una página web.",
+        "Pienso que se me daría bien elegir una buena estructura para montar una página web",
       options: [0, 1, 2, 3, 4, 5],
     },
     {
+      id: 13,
       label:
-        "Sientes curiosidad por cómo está hecha una página web, su estética y diseño me resultan lo más interesante.",
+        "Sientes curiosidad por cómo está hecha una página web, su estética y diseño me resultan lo más interesante",
       options: [0, 1, 2, 3, 4, 5],
     },
   ];
@@ -109,6 +121,7 @@ export function FormTest() {
       });
     }
   };
+
   const calculateProgress = () => {
     const progress = (currentQuestion / questions.length) * 100;
     return progress.toFixed(2);
@@ -128,10 +141,22 @@ export function FormTest() {
     }
   };
 
-  const modelo = new Modelo(); // Crear una instancia de la clase Modelo
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, formData) => {
     e.preventDefault();
+    console.log(Object.values(formData));
+
+    const summaryJSON = generateSummary();
+
+    const response = await fetch("https://backend-express-bd.onrender.com/api/answers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: summaryJSON,
+    });
+
+    const responseBody = await response.json();
+    console.log(responseBody);
 
     try {
       const ultimasRespuestas = Object.values(formData)
@@ -158,14 +183,35 @@ export function FormTest() {
   };
 
   const generateSummary = () => {
-    const summary = [];
-    for (let i = 1; i <= questions.length; i++) {
-      const answer = formData[`question${i}`];
+    const summary = {};
+
+    for (let i = 0; i < questions.length; i++) {
+      const question = questions[i];
+      const answer = formData[`question${i + 1}`];
+
       if (answer !== undefined) {
-        summary.push(`${questions[i - 1].label}: ${answer}`);
+        // Verificar si la respuesta es un número y convertirla
+        const formattedAnswer = !isNaN(answer) ? parseInt(answer, 10) : answer;
+
+        summary[question.label] = formattedAnswer;
       }
     }
-    return summary.join(", ");
+
+    // Convertir el objeto a JSON
+    const summaryJSON = JSON.stringify(summary, null, 2);
+
+    // Imprimir el JSON en la consola (opcional)
+    console.log(summaryJSON);
+
+    return summaryJSON;
+  };
+
+  const handleReview = () => {
+    setShowReview(true);
+  };
+
+  const handleBackToQuestions = () => {
+    setShowReview(false);
   };
 
   const obtenerResultadoTexto = () => {
@@ -182,85 +228,122 @@ export function FormTest() {
 
   return (
     <div className={styles.formContainer}>
-      <Form onSubmit={handleSubmit} className={styles.formStyle}>
-        <div className={styles.progressContainer}>
-          <Progress percent={calculateProgress()} progress success />
-        </div>
-        <div className={styles.currentPage}>
-          Pregunta {currentQuestion} de {questions.length}
-        </div>
+      <Form onSubmit={handleSubmit}>
+        {showReview ? (
+          <div>
+            <h3>Revisar Respuestas</h3>
+            <List>
+              {Object.entries(formData).map(([key, value]) => {
+                // Encontrar la pregunta correspondiente en el array 'questions'
+                const question = questions.find(
+                  (q) => `question${q.id}` === key
+                );
 
-        {questions.map(
-          (question, index) =>
-            index + 1 === currentQuestion && (
-              <div key={index}>
-                <div className={styles.questionContainer}>
-                  <Form.Field>
-                    <label>{question.label}</label>
-                    {question.options ? (
-                      <Form.Group inline>
-                        <div className={styles.radioColumn}>
-                          {question.options.map((option, optionIndex) => (
-                            <Form.Radio
-                              key={optionIndex}
-                              label={option}
-                              onChange={() => handleRadioChange(option)}
-                              checked={
-                                formData[`question${currentQuestion}`] ===
-                                option
-                              }
-                            />
-                          ))}
-                        </div>
-                      </Form.Group>
-                    ) : question.input ? (
-                      <Form.Input
-                        placeholder={question.label}
-                        name={`question${currentQuestion}`}
-                        onChange={handleInputChange}
-                      />
-                    ) : null}
-                  </Form.Field>
-                </div>
-                <div className={styles.buttons}>
-                  <div>
-                    {currentQuestion > 1 && (
-                      <Button
-                        onClick={() => setCurrentQuestion(currentQuestion - 1)}
-                      >
-                        Volver
-                      </Button>
+                return (
+                  <List.Item key={key}>
+                    <List.Content>
+                      <List.Header>{question.label}</List.Header>
+                      <List.Description>{value}</List.Description>
+                    </List.Content>
+                  </List.Item>
+                );
+              })}
+            </List>
+            <div className={styles.buttons}>
+              <Button onClick={handleBackToQuestions}>
+                Volver a las preguntas
+              </Button>
+              <Button type="submit" onClick={handleSubmit}>
+                Enviar
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.formStyle}>
+            <div className={styles.progressContainer}>
+              <Progress percent={calculateProgress()} progress success />
+            </div>
+            <div className={styles.currentPage}>
+              Pregunta {currentQuestion} de {questions.length}
+            </div>
+
+            {questions.map(
+              (question, index) =>
+                index + 1 === currentQuestion && (
+                  <div key={index}>
+                    <div className={styles.questionContainer}>
+                      <Form.Field>
+                        <label>{question.label}</label>
+                        {question.options ? (
+                          <Form.Group inline>
+                            <div className={styles.radioColumn}>
+                              {question.options.map((option, optionIndex) => (
+                                <Form.Radio
+                                  key={optionIndex}
+                                  label={option}
+                                  onChange={() => handleRadioChange(option)}
+                                  checked={
+                                    formData[`question${currentQuestion}`] ===
+                                    option
+                                  }
+                                />
+                              ))}
+                            </div>
+                          </Form.Group>
+                        ) : question.input ? (
+                          <Form.Input
+                            placeholder={question.label}
+                            name={`question${currentQuestion}`}
+                            onChange={handleInputChange}
+                          />
+                        ) : null}
+                      </Form.Field>
+                    </div>
+                    <div className={styles.buttons}>
+                      <div>
+                        {currentQuestion > 1 && (
+                          <Button
+                            onClick={() =>
+                              setCurrentQuestion(currentQuestion - 1)
+                            }
+                          >
+                            Volver
+                          </Button>
+                        )}
+                      </div>
+                      <div>
+                        {currentQuestion < questions.length && (
+                          <Button onClick={handleNextQuestion}>
+                            Siguiente
+                          </Button>
+                        )}
+                      </div>
+                      {currentQuestion === questions.length && (
+                      <div className={styles.submitButtonContainer}>
+                        <Button onClick={handleReview}>
+                          Revisar Respuestas
+                        </Button>
+                      </div>
                     )}
+                    </div>
                   </div>
-                  <div>
-                    {currentQuestion < questions.length && (
-                      <Button onClick={handleNextQuestion}>Siguiente</Button>
-                    )}
-                  </div>
-                </div>
-                {currentQuestion === questions.length && (
-                  <div className={styles.submitButtonContainer}>
-                    <Button type="submit" className={styles.submitButton}>
-                      Enviar
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )
+                )
+            )}
+          </div>
         )}
       </Form>
+
       {prediction ? (
         <div className={styles.predictionContainer}>
-          <p className={styles.textoPrediccion}>Te recomendamos que estudies...</p>
-          <p className={styles.resultadoPrediccion}>{obtenerResultadoTexto()}</p>
+          <p className={styles.textoPrediccion}>
+            Te recomendamos que estudies...
+          </p>
+          <p className={styles.resultadoPrediccion}>
+            {obtenerResultadoTexto()}
+          </p>
         </div>
       ) : (
         <p>Esperando la predicción...</p>
-      )}
-      {currentQuestion === questions.length && (
-        <div className={styles.summaryContainer}>
-          <strong>Resumen de respuestas:</strong> {generateSummary()}
-        </div>
       )}
     </div>
   );

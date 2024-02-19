@@ -3,19 +3,20 @@
 .formContainer{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    // justify-content: center;
     align-items: center;
+    // width: 80%;
 }
 
 .formStyle{
     display: flex;
     flex-direction: column;
-    width: 45%;
+    width: 60rem;
     // justify-content: center;
-    margin: 0 20% 0 20%;
+    // margin: 0 20% 0 20%;
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
     border-radius: 2rem;
-    padding: 3% 10% 3% 10%;
+    padding: 3rem 10% 3rem 10%;
     height: 45rem;
     // width: 40rem;
 }
