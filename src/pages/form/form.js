@@ -5,6 +5,7 @@ import { FormTest } from "@/components/Form";
 import { useAuth } from "@/hooks";
 import { useState, useEffect } from "react";
 import * as styles from "./form.module.scss";
+import { Container } from "semantic-ui-react";
 
 export default function FormPage() {
   const { logout, user } = useAuth();
@@ -19,6 +20,7 @@ export default function FormPage() {
   return (
     <>
       <BasicLayout>
+        <Container>
         <div className={styles.container}>
         <Separator height={100} />
         <h1 className={styles.title}>Formulario</h1>
@@ -33,7 +35,7 @@ export default function FormPage() {
           // Si el usuario no está logueado, mostrar los botones estilizados
           <div className={styles.buttonContainer}>
             <Link href="/join/sign-in" className={styles.loginButton}>
-              Iniciar sesión
+              Iniciar sesión para guardar tus resultados
             </Link>
             <Link href="/form/guestForm" className={styles.guestButton}>
               Acceder como invitado
@@ -42,6 +44,7 @@ export default function FormPage() {
         )}
         <Separator height={110} />
         </div>
+        </Container>
       </BasicLayout>
     </>
   );

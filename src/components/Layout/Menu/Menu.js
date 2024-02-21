@@ -8,7 +8,7 @@ export function Menu() {
       <div className={styles.categories}>
         <Link href="/">Inicio</Link>
         <Link href="/form">Realizar test</Link>
-        <Link href="/info">Saber más</Link>
+        <Link href="/info">Información de FP GS</Link>
       </div>
     </div>
   );

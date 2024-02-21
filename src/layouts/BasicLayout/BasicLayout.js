@@ -18,7 +18,8 @@ export function BasicLayout(props) {
         </div>
       </Container>
 
-      <Footer />
+      <div className={styles.footer}><Footer /></div>
+      
     </>
   );
 }

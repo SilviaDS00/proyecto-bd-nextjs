@@ -1,8 +1,6 @@
 import * as styles from "./Footer.module.scss";
 import Link from "next/link";
 import { Container, Button } from "semantic-ui-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSeedling } from "@fortawesome/free-solid-svg-icons";
 
 export function Footer() {
   return (
@@ -10,11 +8,9 @@ export function Footer() {
       <Container>
         <div className={styles.columns}>
           <div>
-            <Link href="/">
-              OrientaTech
-            </Link>
+            <Link href="/">OrientaTech</Link>
           </div>
-          <div className={styles.center}>
+          <div>
             <ul>
               <Link href="#">Términos y condiciones</Link>
               <Link href="#">Política de privacidad</Link>

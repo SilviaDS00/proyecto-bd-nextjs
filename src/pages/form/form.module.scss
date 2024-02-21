@@ -2,11 +2,12 @@
 .container{
     display: flex;
     flex-direction: column;
-    // justify-content: center;
+    justify-content: center;
     align-items: center;
     height: 72.5vh;
     width: 100%;
-    background-color: #f3f3f3;
+    background-color: #ffffff;
+
   }
 
   .title {
@@ -41,3 +42,16 @@
     }
   }
   
+  .infoButton {
+    padding: 10px 15px;
+    background-color: #ffffff;
+    color: #0070f3;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: #f3f3f3;
+    }
+  }

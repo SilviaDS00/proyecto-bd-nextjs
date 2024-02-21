@@ -12,7 +12,7 @@ export default function fromPage() {
       <BasicLayout>
         <Separator height={100} />
         
-          <FormTest />
+          <FormTest guest={true} />
         
         <Separator height={110} />
 

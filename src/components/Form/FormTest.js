@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { Form, List, Button, Progress } from "semantic-ui-react";
+import { Form, List, Button, Progress, Container } from "semantic-ui-react";
 import styles from "./FormTest.module.scss";
 import axios from "axios";
+import Link from "next/link";
+import { Separator } from "../Shared";
+import { set } from "lodash";
 
-export function FormTest() {
+export function FormTest({guest}) {
   const [formData, setFormData] = useState({});
   const [prediction, setPrediction] = useState(null); // Asegúrate de que setPrediction esté declarada
   const [showReview, setShowReview] = useState(false);
@@ -11,6 +14,7 @@ export function FormTest() {
   const [showForm, setShowForm] = useState(true);
   const [showRepeatButton, setShowRepeatButton] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [grado, setGrado] = useState(null);
 
   const questions = [
     {
@@ -145,54 +149,73 @@ export function FormTest() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       setLoading(true);
-
-      const summaryJSON = generateSummary();
-
-      const response = await fetch(
-        "https://backend-express-bd.onrender.com/api/answers",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: summaryJSON,
-        }
-      );
-
-      const responseBody = await response.json();
-      console.log(responseBody);
-
+  
+      if (!guest) {
+        const summaryJSON = generateSummary();
+  
+        // Guardar las respuestas en la base de datos
+        const response = await fetch(
+          "https://backend-express-bd.onrender.com/api/answers",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: summaryJSON,
+          }
+        );
+  
+        const responseBody = await response.json();
+        console.log(responseBody);
+      }
+  
       const respuestas = Object.values(formData);
       let respuestaObj = {};
-
+  
       for (let i = 0; i < respuestas.length; i++) {
         respuestaObj[questions[i].label] = respuestas[i];
       }
-
+  
       const ultimasRespuestas = respuestas
         .slice(-6)
         .map((respuesta) => parseInt(respuesta, 10));
       const nombresPreguntas = questions
         .slice(-6)
         .map((pregunta) => pregunta.label);
-
+  
       const datosCuestionario = {
         columnas: nombresPreguntas,
         respuestas: ultimasRespuestas.filter((value) => !isNaN(value)),
       };
-
+  
+      // Guardar las respuestas en la base de datos específica para predicciones
       const respuesta = await axios.post(
         "http://127.0.0.1:5000/submit-cuestionario",
         datosCuestionario
       );
-
+  
+      // Almacenar el resultado de la predicción en la base de datos junto con el resto de la información
+      const resultadoPrediccion = respuesta.data.prediccion;
+      // Asegúrate de tener un campo en tu base de datos para almacenar el resultado de la predicción
+      // Esto es un ejemplo y deberías ajustarlo según la estructura de tu base de datos
+      const responseWithPrediction = await fetch(
+        "https://backend-express-bd.onrender.com/api/answers",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...respuestaObj, resultadoPrediccion }),
+        }
+      );
+  
       setShowForm(false);
       setShowRepeatButton(true);
-
-      setPrediction(respuesta.data.prediccion);
+  
+      setPrediction(resultadoPrediccion);
     } catch (error) {
       console.error("Error al obtener la predicción:", error);
     } finally {
@@ -249,133 +272,150 @@ export function FormTest() {
   };
 
   return (
-    <div className={styles.formContainer}>
-      {showForm && (
-        <Form onSubmit={handleSubmit}>
-          {showReview ? (
-            <div>
-              <h3>Revisar Respuestas</h3>
-              <List>
-                {Object.entries(formData).map(([key, value]) => {
-                  // Encontrar la pregunta correspondiente en el array 'questions'
-                  const question = questions.find(
-                    (q) => `question${q.id}` === key
-                  );
+    <Container>
+      <div className={styles.formContainer}>
+        {showForm && (
+          <Form onSubmit={handleSubmit}>
+            {showReview ? (
+              <div>
+                <h3>Revisar Respuestas</h3>
+                <List>
+                  {Object.entries(formData).map(([key, value]) => {
+                    // Encontrar la pregunta correspondiente en el array 'questions'
+                    const question = questions.find(
+                      (q) => `question${q.id}` === key
+                    );
 
-                  return (
-                    <List.Item key={key}>
-                      <List.Content>
-                        <List.Header>{question.label}</List.Header>
-                        <List.Description>{value}</List.Description>
-                      </List.Content>
-                    </List.Item>
-                  );
-                })}
-              </List>
-              <div className={styles.buttons}>
-                <Button onClick={handleBackToQuestions}>
-                  Volver a las preguntas
-                </Button>
-                <Button type="submit" onClick={handleSubmit}>
-                  Enviar
-                </Button>
+                    return (
+                      <List.Item key={key}>
+                        <List.Content>
+                          <List.Header>{question.label}</List.Header>
+                          <List.Description>{value}</List.Description>
+                        </List.Content>
+                      </List.Item>
+                    );
+                  })}
+                </List>
+                <div className={styles.buttons}>
+                  <Button onClick={handleBackToQuestions}>
+                    Volver a las preguntas
+                  </Button>
+                  <Button type="submit" onClick={handleSubmit}>
+                    Enviar
+                  </Button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className={styles.formStyle}>
-              <div className={styles.progressContainer}>
-                <Progress percent={calculateProgress()} progress success />
-              </div>
-              <div className={styles.currentPage}>
-                Pregunta {currentQuestion} de {questions.length}
-              </div>
+            ) : (
+              <div className={styles.formStyle}>
+                <div className={styles.progressContainer}>
+                  <Progress percent={calculateProgress()} progress success />
+                </div>
+                <div className={styles.currentPage}>
+                  Pregunta {currentQuestion} de {questions.length}
+                </div>
 
-              {questions.map(
-                (question, index) =>
-                  index + 1 === currentQuestion && (
-                    <div key={index}>
-                      <div className={styles.questionContainer}>
-                        <Form.Field>
-                          <label>{question.label}</label>
-                          {question.options ? (
-                            <Form.Group inline>
-                              <div className={styles.radioColumn}>
-                                {question.options.map((option, optionIndex) => (
-                                  <Form.Radio
-                                    key={optionIndex}
-                                    label={option}
-                                    onChange={() => handleRadioChange(option)}
-                                    checked={
-                                      formData[`question${currentQuestion}`] ===
-                                      option
-                                    }
-                                  />
-                                ))}
-                              </div>
-                            </Form.Group>
-                          ) : question.input ? (
-                            <Form.Input
-                              placeholder={question.label}
-                              name={`question${currentQuestion}`}
-                              onChange={handleInputChange}
-                            />
-                          ) : null}
-                        </Form.Field>
-                      </div>
-                      <div className={styles.buttons}>
-                        <div>
-                          {currentQuestion > 1 && (
-                            <Button
-                              onClick={() =>
-                                setCurrentQuestion(currentQuestion - 1)
-                              }
-                            >
-                              Volver
-                            </Button>
-                          )}
+                {questions.map(
+                  (question, index) =>
+                    index + 1 === currentQuestion && (
+                      <div key={index}>
+                        <div className={styles.questionContainer}>
+                          <Form.Field>
+                            <label>{question.label}</label>
+                            {question.options ? (
+                              <Form.Group inline>
+                                <div className={styles.radioColumn}>
+                                  {question.options.map(
+                                    (option, optionIndex) => (
+                                      <Form.Radio
+                                        key={optionIndex}
+                                        label={option}
+                                        onChange={() =>
+                                          handleRadioChange(option)
+                                        }
+                                        checked={
+                                          formData[
+                                            `question${currentQuestion}`
+                                          ] === option
+                                        }
+                                      />
+                                    )
+                                  )}
+                                </div>
+                              </Form.Group>
+                            ) : question.input ? (
+                              <Form.Input
+                                placeholder={question.label}
+                                name={`question${currentQuestion}`}
+                                onChange={handleInputChange}
+                              />
+                            ) : null}
+                          </Form.Field>
                         </div>
-                        <div>
-                          {currentQuestion < questions.length && (
-                            <Button onClick={handleNextQuestion}>
-                              Siguiente
-                            </Button>
-                          )}
-                        </div>
-                        {currentQuestion === questions.length && (
-                          <div className={styles.submitButtonContainer}>
-                            <Button onClick={handleReview}>
-                              Revisar Respuestas
-                            </Button>
+                        <div className={styles.buttons}>
+                          <div>
+                            {currentQuestion > 1 && (
+                              <Button
+                                onClick={() =>
+                                  setCurrentQuestion(currentQuestion - 1)
+                                }
+                              >
+                                Volver
+                              </Button>
+                            )}
                           </div>
-                        )}
+                          <div>
+                            {currentQuestion < questions.length && (
+                              <Button onClick={handleNextQuestion}>
+                                Siguiente
+                              </Button>
+                            )}
+                          </div>
+                          {currentQuestion === questions.length && (
+                            <div className={styles.submitButtonContainer}>
+                              <Button onClick={handleReview}>
+                                Revisar Respuestas
+                              </Button>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )
-              )}
-            </div>
-          )}
-        </Form>
-      )}
+                    )
+                )}
+              </div>
+            )}
+          </Form>
+        )}
 
-      {loading && (
-        <div className={styles.loadingContainer}>
-          <p>Calculando resultados...</p>
-          <Progress percent={100} indicating />
-        </div>
-      )}
-      {prediction && !showForm && !loading && (
-        <div className={styles.predictionContainer}>
-          <p className={styles.textoPrediccion}>
-            Te recomendamos que estudies...
-          </p>
-          <p className={styles.resultadoPrediccion}>
-            {obtenerResultadoTexto()}
-          </p>
-          {showRepeatButton && ( // Condición para mostrar el botón de repetir
-            <Button onClick={handleRepeatForm}>Repetir Formulario</Button>
-          )}
-        </div>
-      )}
-    </div>
+        {loading && (
+          <div className={styles.loadingContainer}>
+            <p>Calculando resultados...</p>
+            <Progress percent={100} indicating />
+          </div>
+        )}
+        {prediction && !showForm && !loading && (
+          
+          <div className={styles.predictionContainer}>
+            <Separator height={112} />
+            <p className={styles.textoPrediccion}>
+              Te recomendamos que estudies...
+            </p>
+            <p className={styles.resultadoPrediccion}>
+              {obtenerResultadoTexto()}
+            </p>
+            <Separator height={20} />
+            <Link href="/info">
+              Ver información sobre {obtenerResultadoTexto()} y los otros Grados
+              Superiores aquí
+            </Link>
+
+            <Separator height={20} />
+            {showRepeatButton && ( // Condición para mostrar el botón de repetir
+              <Button onClick={handleRepeatForm}>Repetir Formulario</Button>
+            )}
+            <Separator height={100} />
+          </div>
+        )}
+      </div>
+    </Container>
   );
 }
