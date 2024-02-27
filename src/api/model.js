@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:5000';  // Reemplaza con la URL de tu servicio API
+const API_URL = 'http://127.0.0.1:8000'; 
 
 export class Modelo {
   async predecir(datosCuestionario) {

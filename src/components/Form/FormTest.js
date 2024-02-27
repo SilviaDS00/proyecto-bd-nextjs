@@ -153,10 +153,9 @@ export function FormTest({guest}) {
     try {
       setLoading(true);
   
-      if (!guest) {
+      
         const summaryJSON = generateSummary();
   
-        // Guardar las respuestas en la base de datos
         const response = await fetch(
           "https://backend-express-bd.onrender.com/api/answers",
           {
@@ -170,7 +169,7 @@ export function FormTest({guest}) {
   
         const responseBody = await response.json();
         console.log(responseBody);
-      }
+      
   
       const respuestas = Object.values(formData);
       let respuestaObj = {};
@@ -191,27 +190,24 @@ export function FormTest({guest}) {
         respuestas: ultimasRespuestas.filter((value) => !isNaN(value)),
       };
   
-      // Guardar las respuestas en la base de datos específica para predicciones
-      const respuesta = await axios.post(
-        "http://127.0.0.1:5000/submit-cuestionario",
-        datosCuestionario
-      );
-  
-      // Almacenar el resultado de la predicción en la base de datos junto con el resto de la información
-      const resultadoPrediccion = respuesta.data.prediccion;
-      // Asegúrate de tener un campo en tu base de datos para almacenar el resultado de la predicción
-      // Esto es un ejemplo y deberías ajustarlo según la estructura de tu base de datos
-      const responseWithPrediction = await fetch(
-        "https://backend-express-bd.onrender.com/api/answers",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...respuestaObj, resultadoPrediccion }),
-        }
-      );
-  
+      // console.log(datosCuestionario);
+
+          const response_prediction = await axios.post(
+            'https://django-model-bd.onrender.com/submit-cuestionario/',
+            datosCuestionario,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              withCredentials: true,
+            }
+          );
+      
+            console.log(response_prediction);
+
+      const resultadoPrediccion = response_prediction.data.prediccion;
+
+ 
       setShowForm(false);
       setShowRepeatButton(true);
   
